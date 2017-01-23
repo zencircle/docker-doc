@@ -1,0 +1,124 @@
+Amazon rhe7 image install docker
+
+http://cutler.io/2012/07/installing-centos-packages-on-red-hat-enterprise-linux/
+
+Install docker
+https://docs.docker.com/engine/installation/linux/centos/
+
+Create a webserver
+https://access.redhat.com/articles/1328953
+
+[root@ip-172-31-22-68 web80]#mkdir web80
+[root@ip-172-31-22-68 web80]#cat Dockerfile
+[root@ip-172-31-22-68 web80]#cat action
+[root@ip-172-31-22-68 web80]# docker build -t webwithdb .
+[root@ip-172-31-22-68 web80]#docker run -d -p 80:80 --name=mywebwithdb webwithdb
+[root@ip-172-31-22-68 web80]# curl http://localhost/index.html
+The Web Server is Running
+
+[root@ip-172-31-22-68 web80]#mkdir web90
+[root@ip-172-31-22-68 web90]# 
+[root@ip-172-31-22-68 web80]#cat Dockerfile
+[root@ip-172-31-22-68 web90]# docker build -t webwithdb90 .
+[root@ip-172-31-22-68 web90]# docker run -d -p 90:90 --name=mywebwithdb90 webwithdb90
+[root@ip-172-31-22-68 web90]# docker exec -i -t e660887145b1 bash
+[root@ip-172-31-22-68 ~]# docker exec -i -t c6b36a439fa6 bash
+[root@c6b36a439fa6 /]# vi /etc/httpd/conf/httpd.conf
+[root@c6b36a439fa6 /]# /usr/sbin/httpd -k restart
+Update httpd to listen on port 90
+[root@ip-172-31-22-68 web80]# curl http://localhost:90/index.html
+The Web Server is Running 90 now
+
+[root@ip-172-31-22-68 web80]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+webwithdb90         latest              e660887145b1        13 minutes ago      343 MB
+webwithdb           latest              ba9afd3f5562        41 minutes ago      34centos              latest              67591570dd29        5 weeks ago         192 MB
+
+[root@ip-172-31-22-68 web80]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS                        NAMES
+99dc9d39fa7e        webwithdb90         "/usr/sbin/httpd -..."   8 minutes ago       Up 8 minutes                80/tcp, 0.0.0.0:90->90/tcp   mywebwithdb90
+95317cc37baa        webwithdb           "/usr/sbin/httpd -..."   41 minutes ago      Up 41 minutes               0.0.0.0:80->80/tcp           mywebwithdb
+9403a7f66550        hello-world         "/hello"                 53 minutes ago      Exited (0) 53 minutes ago                                inspiring_mcnulty
+
+[root@ip-172-31-22-68 web90]# docker network ls | grep  bridge
+54780816cdb3        bridge              bridge              local
+
+[root@ip-172-31-22-68 web90]# docker inspect 54780816cdb3
+"Name": "bridge",
+        "Id": "54780816cdb3d9a4e278ef4bdb9b3f36f2cfbf15e2ae3fc1be3513ce7fca75c9",
+                      "Subnet": "172.17.0.0/16"
+
+"Containers": {
+                "Name": "mywebwithdb",
+                "IPv4Address": "172.17.0.2/16",
+
+	 "Name": "mywebwithdb90",
+                "IPv4Address": "172.17.0.3/16",
+
+Container access logs to syslog
+http://www.itzgeek.com/how-tos/linux/centos-how-tos/setup-syslog-server-on-centos-7-rhel-7.html
+https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux_OpenStack_Platform/3/html/Installation_and_Configuration_Guide/Configuring_the_rsyslog_Server.html
+
+On syslog server
+[root@ip-172-31-22-68 log]# mkdir remote
+http://www.rsyslog.com/tag/more-complex-scenarios/
+
+if $fromhost-ip startswith '192.0.1.' then /var/log/network1.log
+
+
+REBOOTED THE SYSTEM
+
+Enable docker at bootime
+[root@ip-172-31-22-68 ~]# systemctl enable docker
+[root@ip-172-31-22-68 ~]# systemctl is-enabled docker
+enabled
+
+Enable docker contrainers to load on bootup
+
+Remove all the existed containers
+sudo docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs sudo docker rm
+docker rm $(docker ps -q -f status=exited)
+
+[root@ip-172-31-22-68 ~]# docker run -d -p 80:80 --name=mywebwithdb webwithdb
+[root@ip-172-31-22-68 ~]# curl http://localhost:80
+[root@ip-172-31-22-68 ~]# docker commit mywebwithdb
+[root@ip-172-31-22-68 ~]# docker run -d -p 90:90 --name=mywebwithdb90 webwithdb90
+[root@ip-172-31-22-68 ~]# docker container ls
+[root@ip-172-31-22-68 ~]# docker exec -i -t c6b36a439fa6 bash
+[root@c6b36a439fa6 /]# vi /etc/httpd/conf/httpd.conf
+[root@c6b36a439fa6 /]# /usr/sbin/httpd -k restart
+[root@ip-172-31-22-68 ~]# curl http://localhost:90/index.html
+The Web Server is Running 90 now
+[root@ip-172-31-22-68 ~]# docker commit mywebwithdb90
+[root@ip-172-31-22-68 system]# cat /etc/systemd/system/docker-webwithdb.service
+[Unit]
+Description=Web 80 container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+ExecStart=/usr/bin/docker run -d -p 80:80 --name=mywebwithdb webwithdb
+ExecStop=/usr/bin/docker stop -t 2 mywebwithdb
+ExecStopPost=/usr/bin/docker rm -f mywebwithdb
+
+[Install]
+WantedBy=default.target
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
