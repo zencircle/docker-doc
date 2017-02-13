@@ -148,7 +148,9 @@ Everything up-to-date
 [root@ip-172-31-22-68 docker-doc]# git add web80
 [root@ip-172-31-22-68 docker-doc]# git status
 
-
+Remove and delete all running containers
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
 
 
 
