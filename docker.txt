@@ -152,6 +152,9 @@ Remove and delete all running containers
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 
+(Delete all containers)
+http://discuss.devopscube.com/t/how-to-delete-all-none-untagged-and-dangling-docker-containers-and-images/23
+
 
 
 
