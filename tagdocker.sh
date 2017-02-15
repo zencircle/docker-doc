@@ -1,4 +1,4 @@
-[ec2-user@ip-10-153-93-180 ~]$ cat tagdocker.sh 
+$ cat tagdocker.sh 
 #!/bin/sh
 #
 # Simple script that will display docker repository tags.
