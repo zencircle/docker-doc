@@ -115,8 +115,7 @@ Create github account
 Repository 
 zencircle/docker
 [root@ip-172-31-22-68 ~]#yum install -y git 
-[root@ip-172-31-22-68 ~]# git config --global credential.helper zencircle
-[root@ip-172-31-22-68 ~]# git config --global credential.helper zencircle
+[root@ip-172-31-22-68 ~]# git config --global credential.helper xyzuser
 [root@ip-172-31-22-68 ~]# git clone https://github.com/zencircle/docker-doc
 [root@ip-172-31-22-68 docker-doc]# git config --global user.name "xyzuser"
 [root@ip-172-31-22-68 docker-doc]# git config --global user.email "xyz@gmail.com"
