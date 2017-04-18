@@ -118,18 +118,18 @@ zencircle/docker
 [root@ip-172-31-22-68 ~]# git config --global credential.helper zencircle
 [root@ip-172-31-22-68 ~]# git config --global credential.helper zencircle
 [root@ip-172-31-22-68 ~]# git clone https://github.com/zencircle/docker-doc
-[root@ip-172-31-22-68 docker-doc]# git config --global user.name "zencircle"
-[root@ip-172-31-22-68 docker-doc]# git config --global user.email "bhargav.joshi@gmail.com"
+[root@ip-172-31-22-68 docker-doc]# git config --global user.name "xyzuser"
+[root@ip-172-31-22-68 docker-doc]# git config --global user.email "xyz@gmail.com"
 [root@ip-172-31-22-68 docker-doc]# git config --global push.default simple
-[root@ip-172-31-22-68 docker-doc]#git config --global username.credential  zencircle
+[root@ip-172-31-22-68 docker-doc]#git config --global username.credential  xyzuser
 [root@ip-172-31-22-68 docker-doc]# git config --global --unset credential.helper
 [root@ip-172-31-22-68 docker-doc]# git config --list
 
 [root@ip-172-31-22-68 docker-doc]# git push
 git: 'credential-zencircle' is not a git command. See 'git --help'.
-Username for 'https://github.com': zencircle
-Password for 'https://zencircle@github.com':
-git: 'credential-zencircle' is not a git command. See 'git --help'.
+Username for 'https://github.com': xyzuser
+Password for 'https://xyzuser@github.com':
+git: 'credential-xyzuser' is not a git command. See 'git --help'.
 Everything up-to-date
 [root@ip-172-31-22-68 docker-doc]# git remote show origin
 * remote origin
